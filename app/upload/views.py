@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
+
+from upload.forms import DocumentForm
 
 
 def image_upload(request):
@@ -13,3 +15,15 @@ def image_upload(request):
             "image_url": image_url
         })
     return render(request, "upload.html")
+
+def model_form_upload(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('upload1')
+    else:
+        form = DocumentForm()
+    return render(request, 'model_form_upload.html', {
+        'form': form
+    })
